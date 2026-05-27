@@ -1,53 +1,43 @@
-# FRAM Nursing Guide
+護理 FRAM 建模指引
+任務邊界定義檢核
+場域：病房、急診、加護病房、手術室、門診、居家護理、長照機構或社區照護。
+工作流程片段：能從開始到結束被觀察的一段明確流程。
+參與者：主責護理師、護理長、醫師、藥師、護理助理、病人、家屬、AI 系統、電子病歷或監測系統。
+終點：具體的工作結果，而不是抽象的品質目標。
+排除項目：會影響流程，但本次不詳細建模的活動。
+常見護理功能
+可先從下列功能挑選，再依情境調整：
 
-## Boundary Definition Checklist
-
-- Setting: ward, emergency department, ICU, operating room, outpatient clinic, home care, long-term care, or community care.
-- Workflow episode: one bounded episode that can be observed from start to end.
-- Actors: primary nurse, charge nurse, physician, pharmacist, nursing assistant, patient, family, AI system, EHR, or monitoring system.
-- Endpoint: a concrete workflow result, not a broad quality goal.
-- Exclusions: activities that influence the workflow but will not be modeled in detail.
-
-## Common Nursing Functions
-
-Use these as candidates, then adapt to the case:
-
-- Receive patient information
-- Assess patient condition
-- Prioritize nursing concerns
-- Verify orders or care plan
-- Communicate with interprofessional team
-- Administer medication or intervention
-- Document care
-- Monitor response
-- Escalate deterioration
-- Educate patient or family
-- Prepare handoff or discharge
-
-## FRAM Aspect Prompts
-
-- Input: What starts this function or what information/material is transformed?
-- Output: What result is produced for another function?
-- Preconditions: What must be true before this function can be performed?
-- Resources: What people, tools, data, spaces, or devices are needed?
-- Control: What rules, protocols, clinical judgment, policies, or alerts shape the function?
-- Time: What deadlines, rhythms, delays, or time pressure matter?
-
-## Variability Prompts
-
-- Timing: early, late, rushed, delayed, interrupted.
-- Precision: incomplete, ambiguous, duplicated, overly general, overly specific.
-- Sequence: skipped, repeated, reordered, parallelized.
-- Capacity: staffing, experience, fatigue, workload, patient acuity.
-- Technology: EHR usability, alert burden, missing data, device integration.
-- Communication: handoff quality, shared mental model, closed-loop confirmation.
-
-## AI Scenario Design Prompts
-
-- What nursing decision or coordination point is being supported?
-- What data does the AI need, and how reliable is that data at the moment of use?
-- Does the AI summarize, predict, detect, prioritize, recommend, or document?
-- What does the nurse see first?
-- What explanation is provided?
-- How can the nurse accept, reject, correct, or escalate the AI output?
-- What harms could appear through automation bias, missed context, inequity, privacy leakage, or alert fatigue?
+接收病人資訊
+評估病人狀態
+排列護理優先順序
+核對醫囑或照護計畫
+與跨專業團隊溝通
+執行給藥或護理處置
+完成護理紀錄
+監測病人反應
+升級通報病情惡化
+教育病人或家屬
+準備交班或出院
+FRAM 六面向提示
+輸入（Input）：什麼資訊、事件或材料啟動此功能？
+輸出（Output）：此功能產生什麼結果，並交給下一個功能？
+前提條件（Preconditions）：執行前必須先成立什麼條件？
+資源（Resources）：需要哪些人、工具、資料、空間或設備？
+控制（Control）：哪些規範、流程、臨床判斷、政策或警示影響此功能？
+時間（Time）：有哪些期限、節奏、延遲或時間壓力？
+變異分析提示
+時間：過早、過晚、匆忙、延遲或被中斷。
+精確度：不完整、模糊、重複、過度籠統或過度細節。
+順序：跳過、重複、重新排序或平行處理。
+容量：人力、經驗、疲勞、工作負荷、病人嚴重度。
+科技：電子病歷易用性、警示負荷、資料缺漏、設備整合。
+溝通：交班品質、共同心智模式、閉環確認。
+AI 情境設計提示
+AI 支援哪一個護理判斷或協調節點？
+AI 需要哪些資料？這些資料在使用當下是否可靠？
+AI 是摘要、預測、偵測、排序、建議，還是輔助紀錄？
+護理師第一眼會看到什麼？
+系統提供什麼解釋？
+護理師如何接受、拒絕、修正或升級處理 AI 輸出？
+可能出現哪些傷害，例如自動化偏誤、脈絡遺漏、不公平、隱私外洩或警示疲乏？
