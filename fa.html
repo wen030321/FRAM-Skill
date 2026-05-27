@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>護理 FRAM × AI 情境設計模型</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: #d8dee9;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --teal: #0f766e;
+      --amber: #b45309;
+      --red: #b42318;
+      --green: #047857;
+      --shadow: 0 14px 30px rgba(31, 41, 55, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+      background:
+        linear-gradient(180deg, rgba(37, 99, 235, 0.08), transparent 320px),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0 48px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .version {
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+
+    .fram-map {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 8px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      min-height: 150px;
+    }
+
+    .node {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      min-height: 56px;
+      background: #fbfdff;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .node.core {
+      background: #e0f2fe;
+      border-color: #93c5fd;
+      color: #1e3a8a;
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      margin-top: 18px;
+      overflow: hidden;
+    }
+
+    .section-title {
+      margin: 0;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      font-size: 20px;
+      background: #fbfcff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      color: #344054;
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #cfd6e4;
+      border-radius: 6px;
+      padding: 11px 12px;
+      font: inherit;
+      color: var(--ink);
+      background: #ffffff;
+      min-height: 44px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 98px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 3px solid rgba(37, 99, 235, 0.18);
+      border-color: var(--primary);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #ffffff;
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .chip input {
+      width: auto;
+      min-height: 0;
+      margin: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 0 20px 20px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 6px;
+      padding: 12px 18px;
+      min-height: 46px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary {
+      color: #ffffff;
+      background: var(--primary);
+    }
+
+    .primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary {
+      color: var(--primary);
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+
+    .results {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 18px;
+    }
+
+    .scorebox {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #fbfdff;
+    }
+
+    .score {
+      font-size: 54px;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .decision {
+      font-size: 22px;
+      font-weight: 900;
+      margin-top: 10px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .result-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .result-list li {
+      margin: 7px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #344054;
+    }
+
+    .table-wrap {
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 800;
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.green {
+      background: #ecfdf3;
+      color: var(--green);
+    }
+
+    .badge.amber {
+      background: #fffbeb;
+      color: var(--amber);
+    }
+
+    .badge.red {
+      background: #fef3f2;
+      color: var(--red);
+    }
+
+    .notice {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 16px 20px 0;
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    @media (max-width: 820px) {
+      header,
+      .grid,
+      .results {
+        grid-template-columns: 1fr;
+      }
+
+      .fram-map {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      main {
+        width: min(100% - 20px, 1120px);
+        padding-top: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>護理 FRAM × AI 情境設計模型</h1>
+        <div class="version">NURSING FRAM AI SCENARIO DESIGNER v1.0</div>
+      </div>
+      <div class="fram-map" aria-label="FRAM functional map">
+        <div class="node">Input<br>輸入</div>
+        <div class="node">Control<br>控制</div>
+        <div class="node">Time<br>時間</div>
+        <div class="node">Resource<br>資源</div>
+        <div class="node core">Function<br>護理功能</div>
+        <div class="node">Output<br>輸出</div>
+      </div>
+    </header>
+
+    <section>
+      <h2 class="section-title">基本研究邊界</h2>
+      <div class="grid">
+        <div>
+          <label for="setting">臨床場域</label>
+          <select id="setting">
+            <option>內科病房</option>
+            <option>急診</option>
+            <option>加護病房 ICU</option>
+            <option>手術室</option>
+            <option>長照機構</option>
+            <option>居家護理</option>
+          </select>
+        </div>
+        <div>
+          <label for="workflow">護理工作流程</label>
+          <select id="workflow">
+            <option>交班與接班</option>
+            <option>給藥安全</option>
+            <option>跌倒風險評估</option>
+            <option>敗血症早期辨識</option>
+            <option>出院衛教</option>
+            <option>警示與異常回應</option>
+          </select>
+        </div>
+        <div>
+          <label for="patient">病人族群</label>
+          <input id="patient" value="住院成人病人，含病情穩定與需觀察者">
+        </div>
+        <div>
+          <label for="endpoint">流程終點</label>
+          <input id="endpoint" value="形成下一班照護優先順序">
+        </div>
+        <div class="full">
+          <label for="scope">排除範圍</label>
+          <input id="scope" value="醫師查房決策、藥局調劑流程、跨院轉診流程">
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">進階 FRAM 與 AI 參數</h2>
+      <div class="grid">
+        <div>
+          <label for="aiRole">AI 角色</label>
+          <select id="aiRole">
+            <option>摘要與待確認清單</option>
+            <option>風險預測與優先排序</option>
+            <option>異常趨勢監測</option>
+            <option>衛教內容個人化</option>
+            <option>紀錄輔助與缺漏提醒</option>
+          </select>
+        </div>
+        <div>
+          <label for="workload">工作負荷</label>
+          <select id="workload">
+            <option value="1">低</option>
+            <option value="2" selected>中</option>
+            <option value="3">高</option>
+          </select>
+        </div>
+        <div>
+          <label for="dataQuality">資料品質</label>
+          <select id="dataQuality">
+            <option value="3">完整且即時</option>
+            <option value="2" selected>部分延遲或分散</option>
+            <option value="1">缺漏且需人工補查</option>
+          </select>
+        </div>
+        <div>
+          <label for="governance">人員覆核機制</label>
+          <select id="governance">
+            <option value="3" selected>護理師逐項確認後採用</option>
+            <option value="2">僅高風險項目需確認</option>
+            <option value="1">系統自動帶入，人工事後修正</option>
+          </select>
+        </div>
+        <div class="full">
+          <label>主要變異來源</label>
+          <div class="chips" id="variability">
+            <label class="chip"><input type="checkbox" value="資訊分散" checked>資訊分散</label>
+            <label class="chip"><input type="checkbox" value="時間壓力" checked>時間壓力</label>
+            <label class="chip"><input type="checkbox" value="中斷頻繁" checked>中斷頻繁</label>
+            <label class="chip"><input type="checkbox" value="病況快速變化">病況快速變化</label>
+            <label class="chip"><input type="checkbox" value="警示疲乏">警示疲乏</label>
+            <label class="chip"><input type="checkbox" value="跨專業溝通落差">跨專業溝通落差</label>
+          </div>
+        </div>
+        <div class="full">
+          <label for="notes">研究設計備註</label>
+          <textarea id="notes">本設計遵循先定義任務邊界，再設計流程與評估的原則；AI 僅作為輔助，不取代護理臨床判斷。</textarea>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="primary" id="runBtn">▶ 執行情境分析</button>
+        <button class="secondary" id="resetBtn">重設範例</button>
+        <span class="muted">輸入參數後可產生 FRAM 表、AI 控制點與評估指標。</span>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">分析結果</h2>
+      <div class="results">
+        <div class="scorebox">
+          <div class="muted">Academic Readiness Score</div>
+          <div class="score" id="score">—</div>
+          <div class="decision" id="decision">尚未分析</div>
+          <div class="badges" id="badges"></div>
+        </div>
+        <div>
+          <h3 id="resultTitle">請按下「執行情境分析」</h3>
+          <ul class="result-list" id="summary">
+            <li>系統會依任務邊界、資料品質、工作負荷與覆核機制產出建議。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <h3>FRAM 功能表</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Input</th>
+              <th>Output</th>
+              <th>Control / Resource</th>
+              <th>Variability</th>
+            </tr>
+          </thead>
+          <tbody id="framRows">
+            <tr><td colspan="5">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <h3>評估維度拆解</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Indicator</th>
+              <th>Data Source</th>
+              <th>Timing</th>
+            </tr>
+          </thead>
+          <tbody id="evalRows">
+            <tr><td colspan="4">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="notice">⚠ 本模型為學術情境設計與課堂作品展示工具，結果僅供研究設計參考，不可直接作為臨床決策或醫療建議。</p>
+    </section>
+
+    <footer>
+      Nursing FRAM AI Scenario Skill · Task boundary first, workflow and evaluation second
+    </footer>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const workflowProfiles = {
+      "交班與接班": ["整理病人資訊", "判斷照護優先順序", "口頭交班", "接班確認", "執行後續照護", "監測與回饋"],
+      "給藥安全": ["核對醫囑", "準備藥物", "辨識病人", "給藥與衛教", "監測反應", "紀錄與通報"],
+      "跌倒風險評估": ["蒐集風險資料", "評估跌倒風險", "擬定預防措施", "溝通照護計畫", "環境檢查", "追蹤事件"],
+      "敗血症早期辨識": ["監測生命徵象", "辨識異常趨勢", "通知醫療團隊", "執行處置", "追蹤治療反應", "更新紀錄"],
+      "出院衛教": ["確認出院需求", "整理衛教重點", "進行病人教學", "確認理解程度", "安排追蹤", "完成文件"],
+      "警示與異常回應": ["接收警示", "判斷警示意義", "床邊確認", "啟動應變", "跨專業溝通", "回饋系統"]
+    };
+
+    function checkedVariability() {
+      return [...document.querySelectorAll("#variability input:checked")].map((item) => item.value);
+    }
+
+    function scoreDesign() {
+      const workload = Number($("workload").value);
+      const dataQuality = Number($("dataQuality").value);
+      const governance = Number($("governance").value);
+      const variabilityCount = checkedVariability().length;
+      let score = 58;
+      score += dataQuality * 8;
+      score += governance * 7;
+      score -= workload * 5;
+      score -= Math.max(0, variabilityCount - 3) * 4;
+      return Math.max(35, Math.min(96, score));
+    }
+
+    function decisionText(score) {
+      if (score >= 82) return ["可形成完整學術情境", "green"];
+      if (score >= 68) return ["可用，但需補強評估設計", "amber"];
+      return ["需重新界定邊界與安全控制", "red"];
+    }
+
+    function renderBadges(levelClass) {
+      const variability = checkedVariability();
+      $("badges").innerHTML = [
+        `<span class="badge ${levelClass}">${$("setting").value}</span>`,
+        `<span class="badge">${$("workflow").value}</span>`,
+        `<span class="badge">${$("aiRole").value}</span>`,
+        ...variability.slice(0, 3).map((v) => `<span class="badge amber">${v}</span>`)
+      ].join("");
+    }
+
+    function renderSummary(score, decision) {
+      const variability = checkedVariability();
+      const aiRole = $("aiRole").value;
+      $("resultTitle").textContent = `${$("workflow").value}：${decision}`;
+      $("summary").innerHTML = `
+        <li>任務邊界已設定為「${$("setting").value}」中的「${$("workflow").value}」，終點為「${$("endpoint").value}」。</li>
+        <li>AI 建議定位為「${aiRole}」，應採用可覆核、可修改、可追溯的輔助模式。</li>
+        <li>主要變異來源為：${variability.length ? variability.join("、") : "尚未指定"}。</li>
+        <li>研究設計分數為 ${score}，建議同時評估交班完整性、工作負荷、使用率與非預期後果。</li>
+      `;
+    }
+
+    function renderFramRows() {
+      const workflow = $("workflow").value;
+      const functions = workflowProfiles[workflow];
+      const variability = checkedVariability().join("、") || "依現場觀察補充";
+      const rows = functions.map((fn, index) => {
+        const next = functions[index + 1] || "照護計畫修正";
+        return `
+          <tr>
+            <td>F${index + 1} ${fn}</td>
+            <td>${index === 0 ? $("patient").value : `F${index} 的輸出`}</td>
+            <td>${next}</td>
+            <td>護理專業判斷、單位規範、EHR、AI 輔助提示</td>
+            <td>${variability}</td>
+          </tr>
+        `;
+      });
+      $("framRows").innerHTML = rows.join("");
+    }
+
+    function renderEvaluationRows() {
+      const rows = [
+        ["Process", "流程完整性、待確認事項完成率", "觀察表、EHR log", "導入前後"],
+        ["Safety", "延遲辨識、近失事件、異常通報", "病歷審查、病安通報", "每月"],
+        ["Usability", "SUS 分數、可解釋性評分", "問卷、訪談", "模擬後與試行後"],
+        ["Workload", "NASA-TLX、流程耗時", "問卷、時間紀錄", "導入前後"],
+        ["Implementation", "使用率、覆核率、AI 修正率", "系統 log", "每週"],
+        ["Ethics", "偏差、隱私、警示疲乏、過度依賴", "訪談、焦點團體、稽核", "試行期間"]
+      ];
+      $("evalRows").innerHTML = rows.map((row) => `
+        <tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>
+      `).join("");
+    }
+
+    function runAnalysis() {
+      const score = scoreDesign();
+      const [decision, levelClass] = decisionText(score);
+      $("score").textContent = score;
+      $("decision").textContent = decision;
+      renderBadges(levelClass);
+      renderSummary(score, decision);
+      renderFramRows();
+      renderEvaluationRows();
+    }
+
+    function resetExample() {
+      $("setting").value = "內科病房";
+      $("workflow").value = "交班與接班";
+      $("patient").value = "住院成人病人，含病情穩定與需觀察者";
+      $("endpoint").value = "形成下一班照護優先順序";
+      $("scope").value = "醫師查房決策、藥局調劑流程、跨院轉診流程";
+      $("aiRole").value = "摘要與待確認清單";
+      $("workload").value = "2";
+      $("dataQuality").value = "2";
+      $("governance").value = "3";
+      document.querySelectorAll("#variability input").forEach((input) => {
+        input.checked = ["資訊分散", "時間壓力", "中斷頻繁"].includes(input.value);
+      });
+      $("notes").value = "本設計遵循先定義任務邊界，再設計流程與評估的原則；AI 僅作為輔助，不取代護理臨床判斷。";
+      runAnalysis();
+    }
+
+    $("runBtn").addEventListener("click", runAnalysis);
+    $("resetBtn").addEventListener("click", resetExample);
+    runAnalysis();
+  </script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+display_name: Nursing FRAM AI Scenario
+short_description: Design nursing FRAM and AI scenarios.
+default_prompt: Use this skill to define a nursing workflow boundary, model it with FRAM, design an AI-supported clinical scenario, and prepare an academic evaluation plan.
