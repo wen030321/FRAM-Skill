@@ -1,97 +1,84 @@
----
-name: nursing-fram-ai-scenario
-description: Design academic nursing FRAM studies and AI-supported clinical scenarios. Use when defining task boundaries, modeling nursing work-as-done with FRAM, designing AI intervention scenarios, assessing variability, planning evaluation, or producing research-oriented outputs for nursing workflow studies.
----
+護理 FRAM × AI 情境設計 Skill
+概述
+使用此 Skill 建立結合 FRAM（Functional Resonance Analysis Method，功能共振分析法）與 AI 輔助臨床情境的護理工作流程研究。整體設計必須保持學術導向：先定義任務邊界，再建立功能、變異、耦合、AI 使用方式與評估計畫。
 
-# Nursing FRAM AI Scenario
+工作流程
+先定義研究邊界，再提出 AI 方案。
 
-## Overview
+說明護理場域、病人族群、工作流程片段、納入範圍、排除範圍與流程終點。
+區分臨床問題與 AI 工具構想。
+若邊界太廣，縮小為一個可觀察的流程，例如交班、給藥、跌倒風險評估、敗血症監測、出院衛教或 ICU 警示回應。
+建立 FRAM 模型。
 
-Use this skill to create academic nursing workflow studies that combine FRAM (Functional Resonance Analysis Method) with AI-supported clinical scenario design. Keep the work research-oriented: define the task boundary first, then model functions, variability, coupling, AI use, and evaluation.
+找出 6 至 10 個核心護理功能。
+每個功能填寫六個 FRAM 面向：輸入（Input）、輸出（Output）、前提條件（Preconditions）、資源（Resources）、控制（Control）、時間（Time）。
+必要時區分 work-as-imagined（制度想像中的工作）與 work-as-done（實際完成的工作）。
+標示變異來源：時間、精確度、順序、工作負荷、中斷、資訊品質、人力配置、科技系統與病人狀態。
+分析功能共振。
 
-## Workflow
+追蹤某一功能的變異如何放大、減弱或轉移到其他功能。
+找出護理判斷、紀錄、交班品質或監測延遲對下游安全的關鍵耦合。
+不要只把變異視為失敗；也要指出護理人員如何透過調適維持照護韌性。
+設計 AI 輔助情境。
 
-1. Define the study boundary before proposing AI.
-   - State the nursing setting, patient population, workflow episode, inclusion and exclusion scope, and endpoint.
-   - Separate the clinical problem from the AI tool idea.
-   - If the boundary is vague, narrow it to one observable workflow such as shift handoff, medication administration, fall-risk screening, sepsis surveillance, discharge education, or ICU alarm response.
+定義 AI 角色：輔助、建議、摘要、監測、分流或優先排序。
+說明使用者、使用時機、輸入資料、輸出格式、升級處理路徑與人工覆核方式。
+納入警示疲乏、自動化偏誤、隱私、可解釋性、不公平與責任歸屬等防護設計。
+除非使用者明確要求其他治理模式，否則維持護理師為最後決策者。
+規劃評估。
 
-2. Build the FRAM model.
-   - Identify 6 to 10 core functions in the workflow.
-   - For each function, fill the six FRAM aspects: Input, Output, Preconditions, Resources, Control, and Time.
-   - Describe work-as-imagined and work-as-done when the distinction matters.
-   - Mark variability sources: timing, precision, sequence, workload, interruptions, information quality, staffing, technology, and patient condition.
+納入流程指標、安全指標、易用性指標、工作負荷指標與導入指標。
+比較基準流程、AI 輔助情境與可能的非預期後果。
+視情境採用混合方法：觀察、模擬、病歷審查、訪談、問卷與系統 log 分析。
+產出學術成果。
 
-3. Analyze functional resonance.
-   - Trace how variability in one function can amplify, dampen, or shift another function.
-   - Identify critical couplings where nursing judgment, documentation, handoff quality, or monitoring delays affect downstream safety.
-   - Avoid treating variability as only failure; identify adaptive performance that makes care resilient.
+選擇輸出形式：研究計畫、FRAM 表、情境 protocol、評估規準、摘要、海報大綱、論文章節或課堂作業。
+使用謹慎的學術語氣，區分證據、假設與設計推論。
+完成前加入限制與倫理考量。
+輸出模板
+完整學術情境設計可使用以下結構：
 
-4. Design the AI-supported scenario.
-   - Define the AI role as assistive, advisory, summarizing, monitoring, or triage-supporting.
-   - Specify the user, moment of use, input data, output format, escalation path, and human override.
-   - Include safeguards for alert fatigue, automation bias, privacy, explainability, inequity, and accountability.
-   - Keep nurses as accountable decision-makers unless the user explicitly asks for a different governance model.
+# 標題
 
-5. Plan evaluation.
-   - Include process measures, safety measures, usability measures, workload measures, and implementation measures.
-   - Compare baseline workflow, AI-supported scenario, and potential unintended consequences.
-   - Use mixed methods when appropriate: observation, simulation, chart audit, interview, survey, and log analysis.
+## 1. 任務邊界
+- 臨床場域：
+- 護理工作流程：
+- 病人族群：
+- 起點：
+- 終點：
+- 排除範圍：
 
-6. Produce academic outputs.
-   - Choose the output type: research proposal, FRAM table, scenario protocol, evaluation rubric, abstract, poster outline, manuscript section, or classroom assignment.
-   - Use cautious academic language. Distinguish evidence, assumptions, and design hypotheses.
-   - Add limitations and ethical considerations before finalizing.
+## 2. 研究目的
+- 問題陳述：
+- 研究／設計問題：
+- 預期貢獻：
 
-## Output Template
-
-Use this structure for a complete academic scenario design:
-
-```markdown
-# Title
-
-## 1. Task Boundary
-- Clinical setting:
-- Nursing workflow:
-- Patient group:
-- Start point:
-- End point:
-- Out of scope:
-
-## 2. Research Purpose
-- Problem statement:
-- Research/design question:
-- Expected contribution:
-
-## 3. FRAM Function Table
-| Function | Input | Output | Preconditions | Resources | Control | Time | Variability |
+## 3. FRAM 功能表
+| 功能 | 輸入 | 輸出 | 前提條件 | 資源 | 控制 | 時間 | 變異 |
 |---|---|---|---|---|---|---|---|
 
-## 4. Resonance Analysis
-- Key coupling 1:
-- Key coupling 2:
-- Adaptive capacity:
-- Risk pattern:
+## 4. 功能共振分析
+- 關鍵耦合 1：
+- 關鍵耦合 2：
+- 調適能力：
+- 風險型態：
 
-## 5. AI-Supported Scenario
-- AI role:
-- User interaction:
-- Data used:
-- Recommendation/output:
-- Human override:
-- Safety controls:
+## 5. AI 輔助情境
+- AI 角色：
+- 使用者互動：
+- 使用資料：
+- 建議／輸出：
+- 人工覆核：
+- 安全控制：
 
-## 6. Evaluation Plan
-| Dimension | Indicator | Data source | Timing |
+## 6. 評估計畫
+| 維度 | 指標 | 資料來源 | 時間點 |
 |---|---|---|---|
 
-## 7. Ethical and Implementation Considerations
+## 7. 倫理與導入考量
 
-## 8. Limitations
-```
+## 8. 限制
+參考資源
+需要詳細 FRAM 建模指引時，閱讀 references/fram-nursing-guide.md。
 
-## References
-
-Read `references/fram-nursing-guide.md` when the task needs detailed FRAM modeling guidance.
-
-Read `references/evaluation-rubric.md` when scoring or improving an academic output.
+需要評分或改善學術成果時，閱讀 references/evaluation-rubric.md。
