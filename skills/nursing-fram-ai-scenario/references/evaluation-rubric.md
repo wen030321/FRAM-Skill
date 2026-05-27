@@ -1,16 +1,13 @@
-# Evaluation Rubric
+評估規準
+每個維度以 1 到 5 分評估。
 
-Score each dimension from 1 to 5.
-
-| Dimension | 1 | 3 | 5 |
-|---|---|---|---|
-| Boundary clarity | Broad topic only | Workflow mostly bounded | Setting, actors, start, end, and exclusions are explicit |
-| FRAM completeness | Few functions or missing aspects | Main functions represented | Functions and six aspects are complete and coherent |
-| Work-as-done sensitivity | Assumes linear ideal process | Notes some real-world variation | Explains adaptation, constraints, and variability without blaming nurses |
-| Resonance analysis | Lists risks only | Connects some functions | Shows how variability propagates across coupled functions |
-| AI fit | AI is generic | AI role is plausible | AI role is specific, timed, explainable, and clinically governed |
-| Safety and ethics | Minimal concerns | Mentions common risks | Includes concrete controls for bias, privacy, accountability, and alert fatigue |
-| Evaluation design | Outcome wish list | Some indicators and sources | Mixed indicators, data sources, timing, and unintended consequences |
-| Academic tone | Promotional | Mostly balanced | Cautious, evidence-aware, and limitation-conscious |
-
-Improvement rule: revise any dimension scored below 4 before treating the output as submission-ready.
+維度	1 分	3 分	5 分
+邊界清楚度	只有廣泛主題	工作流程大致有界定	明確說明場域、角色、起點、終點與排除範圍
+FRAM 完整性	功能太少或面向缺漏	主要功能已呈現	功能與六面向完整且互相一致
+work-as-done 敏感度	假設流程完全線性理想	提到部分現場變異	說明調適、限制與變異，且不將問題簡化為護理人員失誤
+功能共振分析	只列出風險	連結部分功能	說明變異如何在耦合功能間傳播
+AI 適配性	AI 角色過於籠統	AI 角色大致合理	AI 角色具體、使用時機明確、可解釋且有臨床治理
+安全與倫理	幾乎沒有提及	提到常見風險	對偏差、隱私、責任歸屬與警示疲乏提出具體控制
+評估設計	只有期待結果	有部分指標與資料來源	包含多元指標、資料來源、時間點與非預期後果
+學術語氣	偏宣傳	大致平衡	謹慎、注意證據限制，並清楚說明限制
+改善原則：任何低於 4 分的維度，都應在視為可提交成果前修正。
