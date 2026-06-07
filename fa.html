@@ -5,85 +5,203 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>護理 FRAM × AI 情境設計模型</title>
   <style>
-    :root {
-      --bg: #f5f7fb;
-      --panel: #ffffff;
-      --ink: #1f2937;
-      --muted: #667085;
-      --line: #d8dee9;
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --teal: #0f766e;
-      --amber: #b45309;
-      --red: #b42318;
-      --green: #047857;
-      --shadow: 0 14px 30px rgba(31, 41, 55, 0.08);
-    }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
-      background:
-        linear-gradient(180deg, rgba(37, 99, 235, 0.08), transparent 320px),
-        var(--bg);
-      color: var(--ink);
+      font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
       line-height: 1.6;
     }
     main {
-      width: min(1120px, calc(100% - 32px));
+      width: min(1080px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 36px 0 48px;
+      padding: 32px 0 44px;
     }
     header {
       display: grid;
-      grid-template-columns: 1.35fr 0.65fr;
+      grid-template-columns: 1.25fr 0.75fr;
       gap: 24px;
-      align-items: end;
-      margin-bottom: 22px;
+      align-items: center;
+      margin-bottom: 20px;
     }
     h1 {
       margin: 0;
       font-size: clamp(30px, 5vw, 48px);
       line-height: 1.15;
-      letter-spacing: 0;
     }
-    .version {
+    .sub {
       margin-top: 10px;
-      color: var(--muted);
+      color: #667085;
       font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 14px;
+      letter-spacing: 0.06em;
     }
-    .fram-map {
+    .fram {
       position: relative;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      border-radius: 8px;
-      padding: 18px;
-      min-height: 238px;
+      height: 260px;
+      background: #fff;
+      border: 1px solid #d8dee9;
+      border-radius: 10px;
+      box-shadow: 0 14px 30px rgba(31, 41, 55, 0.08);
     }
-    .fram-map::before,
-    .fram-map::after {
-      content: "";
+    .line-h, .line-v {
       position: absolute;
-      background: #bfd0ea;
-      z-index: 0;
-    }
-    .fram-map::before {
-      left: 22%;
-      right: 22%;
+      background: #b8c7dd;
+      left: 18%;
+      right: 18%;
       top: 50%;
       height: 2px;
     }
-    .fram-map::after {
-      top: 20%;
-      bottom: 20%;
+    .line-v {
+      top: 18%;
+      bottom: 18%;
       left: 50%;
+      right: auto;
       width: 2px;
+      height: auto;
     }
-    .node {
+    .aspect {
       position: absolute;
+      min-width: 96px;
+      min-height: 48px;
+      padding: 8px 10px;
+      border: 1px solid #d8dee9;
+      border-radius: 8px;
+      background: #fbfdff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(31, 41, 55, 0.08);
+    }
+    .center {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 126px;
+      min-height: 72px;
+      background: #e0f2fe;
+      color: #1e3a8a;
+      border-color: #93c5fd;
+    }
+    .input { left: 18px; top: 50%; transform: translateY(-50%); }
+    .output { right: 18px; top: 50%; transform: translateY(-50%); }
+    .control { left: 28%; top: 18px; transform: translateX(-50%); }
+    .time { right: 28%; top: 18px; transform: translateX(50%); }
+    .pre { left: 28%; bottom: 18px; transform: translateX(-50%); }
+    .res { right: 28%; bottom: 18px; transform: translateX(50%); }
+    section {
+      margin-top: 18px;
+      background: #fff;
+      border: 1px solid #d8dee9;
+      border-radius: 10px;
+      box-shadow: 0 14px 30px rgba(31, 41, 55, 0.08);
+                  <option>紀錄輔助與缺漏提醒</option>
+          </select>
+        </div>
+        <div>
+          <label for="data">資料品質</label>
+          <select id="data">
+            <option value="3">完整且即時</option>
+            <option value="2" selected>部分延遲或分散</option>
+            <option value="1">缺漏且需人工補查</option>
+          </select>
+        </div>
+        <div class="full">
+          <label for="notes">研究設計備註</label>
+          <textarea id="notes">本設計遵循先定義任務邊界，再設計流程與評估的原則；AI 僅作為輔助，不取代護理臨床判斷。</textarea>
+        </div>
+      </div>
+      <div class="actions">
+        <button onclick="runAnalysis()">執行情境分析</button>
+        <span>產生 FRAM 功能表、AI 建議與評估指標。</span>
+      </div>
+    </section>
+    <section>
+      <h2>分析結果</h2>
+      <div class="result">
+        <div class="scorebox">
+          <div>Academic Readiness Score</div>
+          <div class="score" id="score">82</div>
+          <strong id="decision">可形成完整學術情境</strong>
+        </div>
+        <div>
+          <h3 id="title">交班與接班：AI 輔助情境</h3>
+          <ul id="summary">
+            <li>任務邊界已設定為內科病房中的交班與接班。</li>
+            <li>AI 應作為摘要、提醒與待確認清單，不取代護理師判斷。</li>
+            <li>評估需同時納入流程、安全、易用性、工作負荷與非預期後果。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <h3>FRAM 功能表</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Input</th>
+              <th>Output</th>
+              <th>Control / Resource</th>
+              <th>Variability</th>
+            </tr>
+          </thead>
+          <tbody id="framRows"></tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <h3>評估維度</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Indicator</th>
+              <th>Data Source</th>
+              <th>Timing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Process</td><td>流程完整性、待確認事項完成率</td><td>觀察表、EHR log</td><td>導入前後</td></tr>
+            <tr><td>Safety</td><td>異常延遲辨識、近失事件</td><td>病安通報、病歷審查</td><td>每月</td></tr>
+            <tr><td>Usability</td><td>SUS、可解釋性評分</td><td>問卷、訪談</td><td>模擬後與試行後</td></tr>
+            <tr><td>Workload</td><td>NASA-TLX、交班時間</td><td>問卷、時間紀錄</td><td>導入前後</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">本頁為學術情境設計與課堂作品展示工具，不可直接作為臨床決策或醫療建議。</p>
+    </section>
+    <footer>Task boundary first, workflow and evaluation second.</footer>
+  </main>
+  <script>
+    const profiles = {
+      "交班與接班": ["整理病人資訊", "判斷照護優先順序", "口頭交班", "接班確認", "執行後續照護", "監測與回饋"],
+      "給藥安全": ["核對醫囑", "準備藥物", "辨識病人", "給藥與衛教", "監測反應", "紀錄與通報"],
+      "跌倒風險評估": ["蒐集風險資料", "評估跌倒風險", "擬定預防措施", "溝通照護計畫", "環境檢查", "追蹤事件"],
+      "敗血症早期辨識": ["監測生命徵象", "辨識異常趨勢", "通知醫療團隊", "執行處置", "追蹤治療反應", "更新紀錄"],
+      "出院衛教": ["確認出院需求", "整理衛教重點", "進行病人教學", "確認理解程度", "安排追蹤", "完成文件"]
+    };
+    function runAnalysis() {
+      const workflow = document.getElementById("workflow").value;
+      const setting = document.getElementById("setting").value;
+      const aiRole = document.getElementById("aiRole").value;
+      const data = Number(document.getElementById("data").value);
+      const score = data === 3 ? 90 : data === 2 ? 82 : 68;
+      document.getElementById("score").textContent = score;
+      document.getElementById("decision").textContent = score >= 80 ? "可形成完整學術情境" : "需補強資料品質與安全控制";
+      document.getElementById("title").textContent = workflow + "：" + aiRole;
+      document.getElementById("summary").innerHTML =
+        "<li>任務邊界設定為「" + setting + "」中的「" + workflow + "」。</li>" +
+        "<li>AI 角色為「" + aiRole + "」，需保留護理師覆核與修正權限。</li>" +
+        "<li>主要風險包含資訊延遲、警示疲乏、自動化偏誤與責任歸屬。</li>";
+      const rows = profiles[workflow].map((fn, i) => {
+        const next = profiles[workflow][i + 1] || "照護計畫修正";
+        return "<tr><td>F" + (i + 1) + " " + fn + "</td><td>前一功能或臨床資料</td><td>" + next + "</td><td>護理判斷、EHR、單位規範、AI 提示</td><td>時間壓力、資訊分散、中斷</td></tr>";
+      }).join("");
+      document.getElementById("framRows").innerHTML = rows;
+    }
+    runAnalysis();
+  </script>
+</body>
+</html>
