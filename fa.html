@@ -1,104 +1,90 @@
-      score += governance * 7;
-      score -= workload * 5;
-      score -= Math.max(0, variabilityCount - 3) * 4;
-      return Math.max(35, Math.min(96, score));
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>護理 FRAM × AI 情境設計模型</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: #d8dee9;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --amber: #b45309;
+      --red: #b42318;
+      --green: #047857;
+      --shadow: 0 14px 30px rgba(31, 41, 55, 0.08);
     }
-
-    function decisionText(score) {
-      if (score >= 82) return ["可形成完整學術情境", "green"];
-      if (score >= 68) return ["可用，但需補強評估設計", "amber"];
-      return ["需重新界定邊界與安全控制", "red"];
+    * {
+      box-sizing: border-box;
     }
-
-    function renderBadges(levelClass) {
-      const variability = checkedVariability();
-      $("badges").innerHTML = [
-        `<span class="badge ${levelClass}">${$("setting").value}</span>`,
-        `<span class="badge">${$("workflow").value}</span>`,
-        `<span class="badge">${$("aiRole").value}</span>`,
-        ...variability.slice(0, 3).map((v) => `<span class="badge amber">${v}</span>`)
-      ].join("");
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+      background:
+        linear-gradient(180deg, rgba(37, 99, 235, 0.08), transparent 320px),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
     }
-
-    function renderSummary(score, decision) {
-      const variability = checkedVariability();
-      const aiRole = $("aiRole").value;
-      $("resultTitle").textContent = `${$("workflow").value}：${decision}`;
-      $("summary").innerHTML = `
-        <li>任務邊界已設定為「${$("setting").value}」中的「${$("workflow").value}」，終點為「${$("endpoint").value}」。</li>
-        <li>AI 建議定位為「${aiRole}」，應採用可覆核、可修改、可追溯的輔助模式。</li>
-        <li>主要變異來源為：${variability.length ? variability.join("、") : "尚未指定"}。</li>
-        <li>研究設計分數為 ${score}，建議同時評估交班完整性、工作負荷、使用率與非預期後果。</li>
-      `;
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0 48px;
     }
-
-    function renderFramRows() {
-      const workflow = $("workflow").value;
-      const functions = workflowProfiles[workflow];
-      const variability = checkedVariability().join("、") || "依現場觀察補充";
-      const rows = functions.map((fn, index) => {
-        const next = functions[index + 1] || "照護計畫修正";
-        return `
-          <tr>
-            <td>F${index + 1} ${fn}</td>
-            <td>${index === 0 ? $("patient").value : `F${index} 的輸出`}</td>
-            <td>${next}</td>
-            <td>${index === 0 ? "病人身分與照護紀錄可取得" : `F${index} 已完成且可被確認`}</td>
-            <td>護理專業判斷、單位規範、病人安全標準</td>
-            <td>EHR、AI 輔助提示、護理人力與交班工具</td>
-            <td>班別交接時限、即時異常回應需求</td>
-            <td>${variability}</td>
-          </tr>
-        `;
-      });
-      $("framRows").innerHTML = rows.join("");
+    header {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 22px;
     }
-
-    function renderEvaluationRows() {
-      const rows = [
-        ["Process", "流程完整性、待確認事項完成率", "觀察表、EHR log", "導入前後"],
-        ["Safety", "延遲辨識、近失事件、異常通報", "病歷審查、病安通報", "每月"],
-        ["Usability", "SUS 分數、可解釋性評分", "問卷、訪談", "模擬後與試行後"],
-        ["Workload", "NASA-TLX、流程耗時", "問卷、時間紀錄", "導入前後"],
-        ["Implementation", "使用率、覆核率、AI 修正率", "系統 log", "每週"],
-        ["Ethics", "偏差、隱私、警示疲乏、過度依賴", "訪談、焦點團體、稽核", "試行期間"]
-      ];
-      $("evalRows").innerHTML = rows.map((row) => `
-        <tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>
-      `).join("");
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.15;
+      letter-spacing: 0;
     }
-
-    function runAnalysis() {
-      const score = scoreDesign();
-      const [decision, levelClass] = decisionText(score);
-      $("score").textContent = score;
-      $("decision").textContent = decision;
-      renderBadges(levelClass);
-      renderSummary(score, decision);
-      renderFramRows();
-      renderEvaluationRows();
+    .version {
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 14px;
     }
-
-    function resetExample() {
-      $("setting").value = "內科病房";
-      $("workflow").value = "交班與接班";
-      $("patient").value = "住院成人病人，含病情穩定與需觀察者";
-      $("endpoint").value = "形成下一班照護優先順序";
-      $("scope").value = "醫師查房決策、藥局調劑流程、跨院轉診流程";
-      $("aiRole").value = "摘要與待確認清單";
-      $("workload").value = "2";
-      $("dataQuality").value = "2";
-      $("governance").value = "3";
-      document.querySelectorAll("#variability input").forEach((input) => {
-        input.checked = ["資訊分散", "時間壓力", "中斷頻繁"].includes(input.value);
-      });
-      $("notes").value = "本設計遵循先定義任務邊界，再設計流程與評估的原則；AI 僅作為輔助，不取代護理臨床判斷。";
-      runAnalysis();
+    .fram-map {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 8px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(88px, 1fr));
+      grid-template-rows: repeat(3, minmax(58px, auto));
+      gap: 8px;
+      min-height: 214px;
     }
-
-    $("runBtn").addEventListener("click", runAnalysis);
-    $("resetBtn").addEventListener("click", resetExample);
-    runAnalysis();
-  </script>
-</body>
-</html>
+    .node {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      background: #fbfdff;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 700;
+    }
+    .node.core {
+      background: #e0f2fe;
+      border-color: #93c5fd;
+      color: #1e3a8a;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.22);
+    }
+    .node.time {
+      grid-column: 2;
