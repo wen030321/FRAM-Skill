@@ -98,7 +98,7 @@
       border: 1px solid #d8dee9;
       border-radius: 10px;
       box-shadow: 0 14px 30px rgba(31, 41, 55, 0.08);
-overflow: hidden;
+      overflow: hidden;
     }
     h2 {
       margin: 0;
@@ -218,7 +218,8 @@ overflow: hidden;
         <div class="aspect res">Resources<br>資源</div>
       </div>
     </header>
-    <section>
+
+        <section>
       <h2>基本研究邊界</h2>
       <div class="grid">
         <div>
@@ -257,6 +258,18 @@ overflow: hidden;
             <option value="2" selected>部分延遲或分散</option>
             <option value="1">缺漏且需人工補查</option>
           </select>
+        </div>
+        <div>
+          <label for="patient">病人族群</label>
+          <input id="patient" value="住院成人病人，含病情穩定與需觀察者">
+        </div>
+        <div>
+          <label for="endpoint">流程終點</label>
+          <input id="endpoint" value="形成下一班照護優先順序">
+        </div>
+        <div class="full">
+          <label for="scope">排除範圍</label>
+          <input id="scope" value="醫師查房決策、藥局調劑流程、跨院轉診流程">
         </div>
         <div class="full">
           <label for="notes">研究設計備註</label>
@@ -338,6 +351,9 @@ overflow: hidden;
       const workflow = document.getElementById("workflow").value;
       const setting = document.getElementById("setting").value;
       const aiRole = document.getElementById("aiRole").value;
+      const patient = document.getElementById("patient").value;
+      const endpoint = document.getElementById("endpoint").value;
+      const scope = document.getElementById("scope").value;
       const data = Number(document.getElementById("data").value);
       const score = data === 3 ? 90 : data === 2 ? 82 : 68;
       document.getElementById("score").textContent = score;
@@ -345,11 +361,13 @@ overflow: hidden;
       document.getElementById("title").textContent = workflow + "：" + aiRole;
       document.getElementById("summary").innerHTML =
         "<li>任務邊界設定為「" + setting + "」中的「" + workflow + "」。</li>" +
+        "<li>病人族群為「" + patient + "」，流程終點為「" + endpoint + "」。</li>" +
+        "<li>排除範圍為「" + scope + "」，用來避免分析範圍過大。</li>" +
         "<li>AI 角色為「" + aiRole + "」，需保留護理師覆核與修正權限。</li>" +
         "<li>主要風險包含資訊延遲、警示疲乏、自動化偏誤與責任歸屬。</li>";
       const rows = profiles[workflow].map((fn, i) => {
         const next = profiles[workflow][i + 1] || "照護計畫修正";
-        const input = i === 0 ? "病人資料、EHR、生命徵象、護理紀錄" : "F" + i + " 的輸出與現場回饋";
+        const input = i === 0 ? patient + "、EHR、生命徵象、護理紀錄" : "F" + i + " 的輸出與現場回饋";
         const pre = i === 0 ? "系統可登入，資料可取得" : "前一功能已完成或可被接續";
         const res = "護理師、EHR、監測資料、單位工具";
         const control = "護理專業判斷、單位規範、醫囑、AI 提示";
@@ -360,6 +378,4 @@ overflow: hidden;
       document.getElementById("framRows").innerHTML = rows;
     }
     runAnalysis();
-  </script>
-</body>
-</html>  
+            
